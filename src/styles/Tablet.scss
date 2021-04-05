@@ -1,13 +1,13 @@
-@media only screen and (min-width: 320px) and (max-width: 765px) {
+@media only screen and (min-width: 768px) and (max-width: 1220px) {
   body {
     background-color: lightblue;
   }
   .form_main {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     .form_main_element {
-      width: 80%;
-      grid-column: 1/2;
+      width: 50%;
+      grid-column: 1/4;
       grid-row: 1/3;
     }
   }

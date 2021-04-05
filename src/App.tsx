@@ -4,6 +4,7 @@ import {
   Route,
 } from "react-router-dom";
 import "./styles/Mobile.scss";
+import "./styles/Tablet.scss";
 import "./styles/Desktop.scss";
 import "./styles/Reset.scss";
 import {FormComp} from "./components/Form/Form";
@@ -20,6 +21,16 @@ export const App = () => {
                 seClass="form_main"
                 clClassF="form_main_element"
                 isRegister={true}
+              />
+            )}></Route>
+          <Route
+            exact
+            path="/logon"
+            render={(p) => (
+              <FormComp
+                seClass="form_main"
+                clClassF="form_main_element"
+                isRegister={false}
               />
             )}></Route>
         </Switch>

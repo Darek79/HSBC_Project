@@ -19,6 +19,7 @@ interface CompProps {
   r: RefObject<HTMLInputElement>;
   pass: boolean;
   error?: string;
+  length: number;
 }
 interface inputEvent {
   target: HTMLInputElement;
@@ -35,6 +36,7 @@ export const Input: React.FC<CompProps> = ({
   hasLock,
   pass,
   error,
+  length,
   r,
 }): JSX.Element => {
   const [open, setOpen] = useState<boolean>(
@@ -52,7 +54,7 @@ export const Input: React.FC<CompProps> = ({
         ref={r}
         className={`${clClass} ${laMerge}`}
         type={!open ? type : "text"}
-        minLength={pass ? 8 : undefined}
+        minLength={pass ? length : undefined}
         required={true}
       />
 

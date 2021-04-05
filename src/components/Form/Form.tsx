@@ -11,6 +11,10 @@ interface CompProps {
   clClassF: string;
   seClass: string;
 }
+interface Login {
+  state: boolean;
+  path: string;
+}
 
 export const FormComp: React.FC<CompProps> = ({
   isRegister,
@@ -18,6 +22,10 @@ export const FormComp: React.FC<CompProps> = ({
   seClass,
 }): JSX.Element => {
   const [error, setError] = useState<string>("");
+  const [loggedIn, setLogin] = useState<Login>({
+    state: false,
+    path: "",
+  });
   const usernameRef = useRef<HTMLInputElement | null>(
     null
   );
@@ -30,12 +38,12 @@ export const FormComp: React.FC<CompProps> = ({
 
   function submitMe(e: React.FormEvent): void {
     e.preventDefault();
+    setError(() => "");
 
-    console.log(usernameRef.current!.value);
-    const passwordVerified = checkPattern(
-      passwordRef.current!.value
-    );
     if (isRegister) {
+      const passwordVerified = checkPattern(
+        passwordRef.current!.value
+      );
       const passwordConfirmVerified = checkPattern(
         confirmPasswordRef.current!.value
       );
@@ -51,17 +59,57 @@ export const FormComp: React.FC<CompProps> = ({
         passwordVerified ===
           passwordConfirmVerified
       ) {
-        window.sessionStorage.setItem(
-          `User${Date.now()}`,
-          JSON.stringify({
-            username: usernameRef.current!.value,
-            password: passwordRef.current!.value,
-          })
+        const isAvailable = userExists(
+          usernameRef.current!.value
         );
-        usernameRef.current!.value = "";
-        passwordRef.current!.value = "";
-        confirmPasswordRef.current!.value = "";
+        if (isAvailable) {
+          window.sessionStorage.setItem(
+            usernameRef.current!.value,
+            passwordRef.current!.value
+          );
+
+          resetFields(true);
+          setLogin(() => ({
+            state: true,
+            path: "/logon",
+          }));
+          return;
+        } else {
+          setError(
+            () => "Username is already taken"
+          );
+          resetFields(true);
+        }
+      } else {
+        setError(
+          () => "Please check your fields"
+        );
+        resetFields(true);
+      }
+    } else {
+      const user = window.sessionStorage.getItem(
+        usernameRef.current!.value
+      );
+      if (user === null) {
+        setError(() => "Please sign up first");
+        resetFields(false);
         return;
+      }
+      const passwordVerified = checkPattern(
+        passwordRef.current!.value
+      );
+      if (user === passwordVerified) {
+        setLogin(() => ({
+          state: true,
+          path: "/content",
+        }));
+        resetFields(false);
+        console.log("ok");
+      } else {
+        setError(
+          () => "One of the fields is incorrect"
+        );
+        resetFields(false);
       }
     }
   }
@@ -73,14 +121,25 @@ export const FormComp: React.FC<CompProps> = ({
     return isValid ? str : "";
   }
 
-  function userExists(): boolean {
-    
+  function userExists(str: string): boolean {
+    return window.sessionStorage.getItem(str) ===
+      null
+      ? true
+      : false;
+  }
+  function resetFields(needed: boolean): void {
+    usernameRef.current!.value = "";
+    passwordRef.current!.value = "";
+    if (needed) {
+      confirmPasswordRef.current!.value = "";
+    }
   }
   return (
     <section className={seClass}>
       <form
         className={clClassF}
         onSubmit={submitMe}>
+        <p>{error}</p>
         <Input
           laClass="form_label"
           clClass="form_username"
@@ -92,6 +151,7 @@ export const FormComp: React.FC<CompProps> = ({
           hasLock={false}
           r={usernameRef}
           pass={false}
+          length={5}
         />
         <Input
           laClass="form_label"
@@ -106,6 +166,7 @@ export const FormComp: React.FC<CompProps> = ({
           r={passwordRef}
           pass={true}
           error={error}
+          length={8}
         />
         {isRegister ? (
           <Input
@@ -121,15 +182,24 @@ export const FormComp: React.FC<CompProps> = ({
             r={confirmPasswordRef}
             pass={true}
             error={error}
+            length={8}
           />
         ) : undefined}
-        <input value="submit" type="submit" />
+        <input
+          className="form_submit ripple"
+          value="SUBMIT"
+          type="submit"
+        />
+
         <NavLink
           className="form_navlink"
-          to="/logon">
-          I have allready an account
+          to={isRegister ? "/logon" : "/"}>
+          {isRegister
+            ? `I have allready an account`
+            : `I want to sign up`}
         </NavLink>
       </form>
+      {loggedIn.state?<Redirect to={loggedIn.path}/>:undefined}
     </section>
   );
 };
