@@ -8,6 +8,8 @@ import "./styles/Tablet.scss";
 import "./styles/Desktop.scss";
 import "./styles/Reset.scss";
 import {FormComp} from "./components/Form/Form";
+import {Content} from "./components/Content/Content";
+import {Card} from "./components/Card/Card";
 export const App = () => {
   return (
     <div className="App">
@@ -21,6 +23,7 @@ export const App = () => {
                 seClass="form_main"
                 clClassF="form_main_element"
                 isRegister={true}
+                {...p}
               />
             )}></Route>
           <Route
@@ -31,6 +34,25 @@ export const App = () => {
                 seClass="form_main"
                 clClassF="form_main_element"
                 isRegister={false}
+                {...p}
+              />
+            )}></Route>
+          <Route
+            exact
+            path="/content/:name"
+            render={(p) => (
+              <Content
+                {...p}
+                clSection="main_content"
+              />
+            )}></Route>
+          <Route
+            exact
+            path="/content/:id/:name"
+            render={(p) => (
+              <Content
+                {...p}
+                clSection="main_content"
               />
             )}></Route>
         </Switch>
@@ -40,3 +62,16 @@ export const App = () => {
 };
 
 export default App;
+
+{
+  /* <Route
+exact
+path="/logon"
+render={(p) => (
+  <FormComp
+    seClass="form_main"
+    clClassF="form_main_element"
+    isRegister={false}
+  />
+)}></Route> */
+}

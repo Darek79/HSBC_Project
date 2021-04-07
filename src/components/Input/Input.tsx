@@ -1,7 +1,5 @@
 import React, {
   useState,
-  useRef,
-  useEffect,
   RefObject,
 } from "react";
 import lockOpen from "./../../assets/Lockopen.svg";
@@ -21,9 +19,7 @@ interface CompProps {
   error?: string;
   length: number;
 }
-interface inputEvent {
-  target: HTMLInputElement;
-}
+
 export const Input: React.FC<CompProps> = ({
   clClass,
   laClass,

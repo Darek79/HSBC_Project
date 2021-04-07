@@ -1,4 +1,5 @@
 import {useEffect, useState, useRef} from "react";
+import {RouteComponentProps} from "react-router-dom";
 import {
   NavLink,
   Redirect,
@@ -6,7 +7,7 @@ import {
 import {Input} from "./../Input/Input";
 import "./form.scss";
 
-interface CompProps {
+interface CompProps extends RouteComponentProps {
   isRegister: boolean;
   clClassF: string;
   seClass: string;
@@ -20,6 +21,8 @@ export const FormComp: React.FC<CompProps> = ({
   isRegister,
   clClassF,
   seClass,
+  match,
+  location,
 }): JSX.Element => {
   const [error, setError] = useState<string>("");
   const [loggedIn, setLogin] = useState<Login>({
@@ -101,7 +104,9 @@ export const FormComp: React.FC<CompProps> = ({
       if (user === passwordVerified) {
         setLogin(() => ({
           state: true,
-          path: "/content",
+          path: `/content/${
+            usernameRef.current!.value
+          }`,
         }));
         resetFields(false);
         console.log("ok");
@@ -136,6 +141,7 @@ export const FormComp: React.FC<CompProps> = ({
   }
   return (
     <section className={seClass}>
+      {console.log(match, location)}
       <form
         className={clClassF}
         onSubmit={submitMe}>
@@ -199,7 +205,14 @@ export const FormComp: React.FC<CompProps> = ({
             : `I want to sign up`}
         </NavLink>
       </form>
-      {loggedIn.state?<Redirect to={loggedIn.path}/>:undefined}
+      {loggedIn.state ? (
+        <Redirect
+          to={{
+            pathname: loggedIn.path,
+            state: {logedIn: true},
+          }}
+        />
+      ) : undefined}
     </section>
   );
 };
