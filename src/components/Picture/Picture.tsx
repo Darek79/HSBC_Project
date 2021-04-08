@@ -11,7 +11,7 @@ export const Picture: React.FC<CompProps> = ({
   <picture className={clPicture}>
     <source
       srcSet={
-        "http://placeimg.com/450/600/nature"
+        "https://via.placeholder.com/400x350/500"
       }
       media={`(min-width:${mediasize}px)`}
     />
@@ -21,3 +21,5 @@ export const Picture: React.FC<CompProps> = ({
     />
   </picture>
 );
+// 'https://i.picsum.photos/id/1011/450/600/'
+// "http://placeimg.com/450/600/nature"

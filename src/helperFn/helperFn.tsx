@@ -53,7 +53,7 @@ export function fetchLimit(
           } catch (error) {
             rej(error.message);
           }
-        }, 1000);
+        }, 2000);
       }
     );
     prom
@@ -67,7 +67,6 @@ export function fetchLimit(
         return false;
       })
       .then((d) => {
-        console.log(d);
         if (d || d === undefined) {
           fetchLimit(
             limit,

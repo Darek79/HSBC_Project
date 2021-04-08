@@ -10,9 +10,12 @@ import "./styles/Reset.scss";
 import {FormComp} from "./components/Form/Form";
 import {Content} from "./components/Content/Content";
 import {Card} from "./components/Card/Card";
+import {CardNoLink} from "./components/Card/CardNoLink";
+import {ContentConnection} from "./components/ConnectionCheck/Connection";
 export const App = () => {
   return (
     <div className="App">
+      <ContentConnection />
       <Router>
         <Switch>
           <Route
@@ -44,15 +47,20 @@ export const App = () => {
               <Content
                 {...p}
                 clSection="main_content"
+                imagesCount={5}
               />
             )}></Route>
           <Route
             exact
-            path="/content/:id/:name"
+            path="/post/:id/:name"
             render={(p) => (
-              <Content
+              <CardNoLink
                 {...p}
-                clSection="main_content"
+                clItem="card_item"
+                cardSolo="card_solo"
+                clUser="card_user"
+                clTitle="card_title"
+                clBody="card_body"
               />
             )}></Route>
         </Switch>

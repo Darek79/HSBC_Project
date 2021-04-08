@@ -3,8 +3,7 @@ import "./content.scss";
 import {
   useState,
   useEffect,
-  useRef,
-  useCallback,
+  createRef,
 } from "react";
 import {Card} from "./../Card/Card";
 import {RouteComponentProps} from "react-router-dom";
@@ -13,195 +12,96 @@ import {
   names,
   randomNr,
 } from "./../../helperFn/helperFn";
-const userpost = {
-  userId: "Tomek",
-  id: 1,
-  title:
-    "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-  body:
-    "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto",
-};
+
 interface CompProps
   extends RouteComponentProps<{name: string}> {
   clSection: string;
+  imagesCount: number;
 }
 export const Content: React.FC<CompProps> = ({
   match,
   location,
   clSection,
+  imagesCount,
 }): JSX.Element => {
   const [data, setData] = useState<any[]>([]);
   const [error, setError] = useState<string>("");
+  const nodeRef;;
   useEffect(() => {
-    // fetchFiles(
-    //   "https://jsonplaceholder.typicode.com/posts/1",
-    //   setData,
-    //   setError
-    // );
-    // fetchLimit(
-    //   3,
-    //   1,
-    //   setData,
-    //   setError,
-    //   randomNr,
-    //   names
-    // );
+    if (sessionStorage.getItem("data")) {
+      const time = Math.floor(Date.now() / 1000);
+      const object = sessionStorage.getItem(
+        "data"
+      );
+      let parsed: {
+        lastChecked: number;
+        data: any[];
+      } =
+        object !== null
+          ? JSON.parse(object)
+          : {lastChecked: 0, data: []};
+      if (object !== null) {
+        parsed = JSON.parse(object);
+      }
+
+      if (time - parsed.lastChecked > 60) {
+        fetchLimit(
+          imagesCount,
+          1,
+          setData,
+          setError,
+          randomNr,
+          names
+        );
+      } else {
+        setData(() => parsed.data);
+      }
+    } else {
+      fetchLimit(
+        imagesCount,
+        1,
+        setData,
+        setError,
+        randomNr,
+        names
+      );
+    }
   }, []);
+
+  useEffect(() => {
+    console.log(data.length, imagesCount - 1);
+    if (data.length === imagesCount - 1) {
+      sessionStorage.setItem(
+        "data",
+        JSON.stringify({
+          lastChecked: Math.floor(
+            Date.now() / 1000
+          ),
+          data,
+        })
+      );
+    }
+  }, [data]);
 
   return (
     <section className={clSection}>
-      {console.log(match)}
-      <Card
-        userId={userpost.userId}
-        id={userpost.id}
-        title={userpost.title}
-        body={userpost.body}
-        clItem="card_item"
-        cardLink="card_link"
-        clUser="card_user"
-        clTitle="card_title"
-        clBody="card_body"
-        userName={match.params.name}
-      />
-      <Card
-        userId={userpost.userId}
-        id={userpost.id}
-        title={userpost.title}
-        body={userpost.body}
-        clItem="card_item"
-        cardLink="card_link"
-        clUser="card_user"
-        clTitle="card_title"
-        clBody="card_body"
-        userName={match.params.name}
-      />
-
-      <Card
-        userId={userpost.userId}
-        id={userpost.id}
-        title={userpost.title}
-        body={userpost.body}
-        clItem="card_item"
-        cardLink="card_link"
-        clUser="card_user"
-        clTitle="card_title"
-        clBody="card_body"
-        userName={match.params.name}
-      />
-      <Card
-        userId={userpost.userId}
-        id={userpost.id}
-        title={userpost.title}
-        body={userpost.body}
-        clItem="card_item"
-        cardLink="card_link"
-        clUser="card_user"
-        clTitle="card_title"
-        clBody="card_body"
-        userName={match.params.name}
-      />
-      <Card
-        userId={userpost.userId}
-        id={userpost.id}
-        title={userpost.title}
-        body={userpost.body}
-        clItem="card_item"
-        cardLink="card_link"
-        clUser="card_user"
-        clTitle="card_title"
-        clBody="card_body"
-        userName={match.params.name}
-      />
-
-      <Card
-        userId={userpost.userId}
-        id={userpost.id}
-        title={userpost.title}
-        body={userpost.body}
-        clItem="card_item"
-        cardLink="card_link"
-        clUser="card_user"
-        clTitle="card_title"
-        clBody="card_body"
-        userName={match.params.name}
-      />
-      <Card
-        userId={userpost.userId}
-        id={userpost.id}
-        title={userpost.title}
-        body={userpost.body}
-        clItem="card_item"
-        cardLink="card_link"
-        clUser="card_user"
-        clTitle="card_title"
-        clBody="card_body"
-        userName={match.params.name}
-      />
-      <Card
-        userId={userpost.userId}
-        id={userpost.id}
-        title={userpost.title}
-        body={userpost.body}
-        clItem="card_item"
-        cardLink="card_link"
-        clUser="card_user"
-        clTitle="card_title"
-        clBody="card_body"
-        userName={match.params.name}
-      />
-
-      <Card
-        userId={userpost.userId}
-        id={userpost.id}
-        title={userpost.title}
-        body={userpost.body}
-        clItem="card_item"
-        cardLink="card_link"
-        clUser="card_user"
-        clTitle="card_title"
-        clBody="card_body"
-        userName={match.params.name}
-      />
-      <Card
-        userId={userpost.userId}
-        id={userpost.id}
-        title={userpost.title}
-        body={userpost.body}
-        clItem="card_item"
-        cardLink="card_link"
-        clUser="card_user"
-        clTitle="card_title"
-        clBody="card_body"
-        userName={match.params.name}
-      />
-      <Card
-        userId={userpost.userId}
-        id={userpost.id}
-        title={userpost.title}
-        body={userpost.body}
-        clItem="card_item"
-        cardLink="card_link"
-        clUser="card_user"
-        clTitle="card_title"
-        clBody="card_body"
-        userName={match.params.name}
-      />
-
-      <Card
-        userId={userpost.userId}
-        id={userpost.id}
-        title={userpost.title}
-        body={userpost.body}
-        clItem="card_item"
-        cardLink="card_link"
-        clUser="card_user"
-        clTitle="card_title"
-        clBody="card_body"
-        userName={match.params.name}
-      />
-      {console.log(data.length > 0 && data)}
       {data.length > 0 &&
-        data.map((el) => <p>{el.userId}</p>)}
+        data.map((el) => (
+          <Card
+            key={el.title}
+            userId={el.userId}
+            id={el.id}
+            title={el.title}
+            body={el.body}
+            clItem="card_item"
+            cardLink="card_link"
+            clUser="card_user"
+            clTitle="card_title"
+            clBody="card_body"
+            userName={match.params.name}
+            r={nodeRef}
+          />
+        ))}
     </section>
   );
 };
