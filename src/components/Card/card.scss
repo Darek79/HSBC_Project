@@ -4,6 +4,17 @@
   justify-self: center;
   width: 600px !important;
   height: 800px !important;
+  position: relative;
+
+  .card_solo_x {
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    text-decoration: none;
+    background-image: url("./../../assets/Close.svg");
+  }
 }
 
 .card_item {

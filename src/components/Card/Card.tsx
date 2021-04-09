@@ -1,10 +1,8 @@
-import {
-  memo,
-  MutableRefObject,
-  RefObject,
-} from "react";
+import {memo, createRef} from "react";
 import {Picture} from "./../Picture/Picture";
 import {NavLink} from "react-router-dom";
+
+// RefObject<HTMLElement>
 
 import "./card.scss";
 
@@ -19,7 +17,7 @@ interface CompProps {
   clTitle: string;
   clBody: string;
   clUser: string;
-  r: HTMLDivElement;
+  i?: number;
 }
 
 export const Card: React.FC<CompProps> = memo(
@@ -34,8 +32,9 @@ export const Card: React.FC<CompProps> = memo(
     clBody,
     clUser,
     userName,
-    r,
   }): JSX.Element => {
+    const nodeRef = createRef<HTMLElement>();
+
     return (
       <NavLink
         to={{
@@ -44,10 +43,11 @@ export const Card: React.FC<CompProps> = memo(
             userId: userId,
             title: title,
             body: body,
+            referrer: window.location.pathname,
           },
         }}
         className={cardLink}>
-        <section className={clItem} ref={r}>
+        <section className={clItem} ref={nodeRef}>
           <p className={clUser}>{userId}</p>
           <Picture
             mediasize="1000"

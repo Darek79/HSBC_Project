@@ -1,4 +1,5 @@
 import axios, {AxiosResponse} from "axios";
+import {v4} from "uuid";
 export const fetchFiles = async (
   url: string,
   fnSet: (arg: () => any[]) => void,
@@ -13,7 +14,7 @@ export const fetchFiles = async (
   }
 };
 export function randomNr(): number {
-  return Math.floor(Math.random() * 30 + 1);
+  return Math.floor(Math.random() * 29 + 1);
 }
 interface Data {
   data: {
@@ -21,6 +22,7 @@ interface Data {
     id: number;
     title: string;
     body: string;
+    key: string;
   };
 }
 
@@ -36,12 +38,13 @@ export function fetchLimit(
   fnNumber: () => number,
   names: string[]
 ) {
+  let clear: number;
   if (n === limit) {
     return;
   } else {
     const prom: Promise<Data> = new Promise(
       (res, rej) => {
-        setTimeout(() => {
+        clear = window.setTimeout(() => {
           try {
             const data: Promise<
               AxiosResponse<any>
@@ -60,7 +63,9 @@ export function fetchLimit(
       .then(({data}) => {
         const nr = fnNumber();
         data.userId = names[nr];
+        data.key = v4();
         fnSet((p) => [data, ...p]);
+        clearTimeout(clear);
       })
       .catch((error) => {
         fnError(() => error.message);

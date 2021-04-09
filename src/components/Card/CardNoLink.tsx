@@ -1,11 +1,16 @@
 import {Picture} from "./../Picture/Picture";
-import {useLocation} from "react-router-dom";
+import {
+  useLocation,
+  Link,
+} from "react-router-dom";
+import Closex from "./../../assets/Close.svg";
 import "./card.scss";
 
 interface Match {
   userId: string;
   body: string;
   title: string;
+  referrer: string;
 }
 
 interface CompProps {
@@ -26,8 +31,12 @@ export const CardNoLink: React.FC<CompProps> = ({
   const {state} = useLocation<Match>();
   return (
     <section className={`${clItem} ${cardSolo}`}>
-      {console.log(state.userId)}
-      <p className={clUser}>{"test"}</p>
+      {console.log(state.referrer)}
+      <Link
+        to={state.referrer}
+        className="card_solo_x">
+      </Link>
+      <p className={clUser}>{state.userId}</p>
       <Picture
         mediasize="1000"
         clPicture="picture_item"

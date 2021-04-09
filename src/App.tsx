@@ -47,7 +47,7 @@ export const App = () => {
               <Content
                 {...p}
                 clSection="main_content"
-                imagesCount={5}
+                imagesCount={12}
               />
             )}></Route>
           <Route

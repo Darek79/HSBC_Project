@@ -1,27 +1,53 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import "./connection.scss";
+
+const iamConnected = (): boolean => {
+  return (
+    typeof navigator !== "undefined" &&
+    typeof navigator.onLine === "boolean"
+  );
+};
 
 export const ContentConnection = (): JSX.Element => {
   const [
     connected,
     setConnect,
-  ] = useState<boolean>(true);
+  ] = useState<boolean>(iamConnected());
+  const connectRef = useRef<number>(0);
 
-  function cb(): void {
-    if (!window.navigator.onLine) {
-      setConnect(() => false);
-      console.log("disconnected");
-      return;
-    } else if (window.navigator.onLine) {
-      console.log("connected");
+  const cbOnline = (): void => {
+    let clear: number;
+    const prom = new Promise(
+      (resolve, reject) => {
+        clear = window.setTimeout(() => {
+          resolve(true);
+        }, 1000);
+      }
+    );
+    prom.then((d) => {
       setConnect(() => true);
-      return;
-    }
-  }
+      clearTimeout(clear);
+      window.location.reload();
+    });
+  };
+
+  const cbOffline = (): void =>
+    setConnect(() => false);
 
   useEffect(() => {
-    const clear = setInterval(cb, 4000);
-    return () => clearInterval(clear);
+    window.addEventListener("online", cbOnline);
+    window.addEventListener("offline", cbOffline);
+
+    return () => {
+      window.removeEventListener(
+        "online",
+        cbOnline
+      );
+      window.removeEventListener(
+        "offline",
+        cbOffline
+      );
+    };
   }, []);
 
   return (
@@ -33,7 +59,7 @@ export const ContentConnection = (): JSX.Element => {
       }>
       {!connected ? (
         <div className="conn_error">
-          INTERNET CONNECTION LOST
+          <p>INTERNET CONNECTION LOST</p>
         </div>
       ) : undefined}
     </section>

@@ -1,7 +1,4 @@
-import React, {
-  useState,
-  RefObject,
-} from "react";
+import React, {useState, RefObject} from "react";
 import lockOpen from "./../../assets/Lockopen.svg";
 import lockClosed from "./../../assets/Lockclosed.svg";
 interface CompProps {
@@ -52,6 +49,10 @@ export const Input: React.FC<CompProps> = ({
         type={!open ? type : "text"}
         minLength={pass ? length : undefined}
         required={true}
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck={false}
       />
 
       <span className={`${erClass} ${laMerge}`}>
