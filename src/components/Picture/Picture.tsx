@@ -1,11 +1,12 @@
 interface CompProps {
   mediasize: string;
-
+  mediasize1: string;
   clPicture: string;
 }
 
 export const Picture: React.FC<CompProps> = ({
   mediasize,
+  mediasize1,
   clPicture,
 }) => (
   <picture className={clPicture}>
@@ -15,9 +16,15 @@ export const Picture: React.FC<CompProps> = ({
       }
       media={`(min-width:${mediasize}px)`}
     />
+    <source
+      srcSet={
+        "http://placeimg.com/450/350/nature"
+      }
+      media={`(min-width:${mediasize1}px)`}
+    />
     <img
       alt="test"
-      src={"http://placeimg.com/640/480/animals"}
+      src={"http://placeimg.com/450/350/animals"}
     />
   </picture>
 );

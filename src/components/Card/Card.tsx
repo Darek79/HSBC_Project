@@ -2,8 +2,6 @@ import {memo, createRef} from "react";
 import {Picture} from "./../Picture/Picture";
 import {NavLink} from "react-router-dom";
 
-// RefObject<HTMLElement>
-
 import "./card.scss";
 
 interface CompProps {
@@ -50,7 +48,8 @@ export const Card: React.FC<CompProps> = memo(
         <section className={clItem} ref={nodeRef}>
           <p className={clUser}>{userId}</p>
           <Picture
-            mediasize="1000"
+            mediasize="1200"
+            mediasize1="318"
             clPicture="picture_item"
           />
           <p className={clTitle}>{title}</p>

@@ -3,7 +3,7 @@ import {
   useLocation,
   Link,
 } from "react-router-dom";
-import Closex from "./../../assets/Close.svg";
+
 import "./card.scss";
 
 interface Match {
@@ -34,11 +34,11 @@ export const CardNoLink: React.FC<CompProps> = ({
       {console.log(state.referrer)}
       <Link
         to={state.referrer}
-        className="card_solo_x">
-      </Link>
+        className="card_solo_x"></Link>
       <p className={clUser}>{state.userId}</p>
       <Picture
         mediasize="1000"
+        mediasize1="318"
         clPicture="picture_item"
       />
       <p className={clTitle}>{state.title}</p>

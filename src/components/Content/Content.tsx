@@ -6,7 +6,6 @@ import {
   useEffect,
   useRef,
   createRef,
-  MutableRefObject,
 } from "react";
 
 import {Card} from "./../Card/Card";
@@ -17,6 +16,7 @@ import {
   fetchLimit,
   names,
   randomNr,
+  checkWidth,
 } from "./../../helperFn/helperFn";
 
 interface CompProps
@@ -26,9 +26,9 @@ interface CompProps
 }
 export const Content: React.FC<CompProps> = ({
   match,
-  location,
   clSection,
   imagesCount,
+  history,
 }): JSX.Element => {
   const [data, setData] = useState<any[]>([]);
   const [error, setError] = useState<string>("");
@@ -60,7 +60,7 @@ export const Content: React.FC<CompProps> = ({
       if (object !== null) {
         parsed = JSON.parse(object);
       }
-      if (time - parsed.lastChecked > 6000) {
+      if (time - parsed.lastChecked > 600) {
         setData(() => []);
         window.sessionStorage.removeItem("data");
         fetchLimit(
@@ -87,16 +87,24 @@ export const Content: React.FC<CompProps> = ({
   }, []);
 
   const handleClick = (): void => {
-    if (inputRef.current !== null) {
-      console.log(inputRef.current.value);
-
-      setCheck(true);
+    if (
+      inputRef.current !== null &&
+      inputRef.current.value
+    ) {
+      setCheck((p) => !p);
+      console.log(checkWidth());
+      let nr = checkWidth();
+      let end =
+        Number(currentNode.current) + nr! <
+        data.length
+          ? Number(currentNode.current) + nr!
+          : Math.abs(
+              Number(currentNode.current) -
+                data.length
+            );
       for (
         let i = Number(currentNode.current);
-        i <
-        Number(currentNode.current) +
-          (data.length -
-            Number(currentNode.current));
+        i < Number(currentNode.current) + end;
         i++
       ) {
         if (
@@ -108,6 +116,21 @@ export const Content: React.FC<CompProps> = ({
           )
         ) {
           console.log(data[i]);
+          if (
+            data[i] &&
+            window.location.pathname
+          ) {
+            history.push(
+              `/post/${data[i].id}/${data[i].userId}`,
+              {
+                userId: data[i].userId,
+                title: data[i].title,
+                body: data[i].body,
+                referrer:
+                  window.location.pathname,
+              }
+            );
+          }
         } else {
           setError(
             () =>
@@ -115,9 +138,14 @@ export const Content: React.FC<CompProps> = ({
                 inputRef.current!.value
               }`
           );
+          setCheck((p) => !p);
         }
       }
     }
+  };
+
+  const resetError = (): void => {
+    setError("");
   };
 
   useEffect(() => {
@@ -125,7 +153,6 @@ export const Content: React.FC<CompProps> = ({
       nodeRef.current = new IntersectionObserver(
         ([entry]) => {
           console.log(entry);
-
           currentNode.current = entry.target.getAttribute(
             "data-index"
           );
@@ -163,26 +190,45 @@ export const Content: React.FC<CompProps> = ({
 
   return (
     <section className={clSection}>
+      {console.log(history)}
       <div className="search_bar">
-        <Input
-          hasLock={false}
-          laClass="search_bar_label"
-          spClass="search_bar_span"
-          laMerge="search_bar_merge"
-          clClass="search_bar_input"
-          pass={false}
-          placeholder=""
-          r={inputRef}
-          length={0}
-          erClass="search_bar_error"
-          type="text"
-        />
-        <Button
-          txt="SEARCH"
-          cn="search_bar_btn ripple"
-          fnClick={handleClick}
-          disabled={checkVal}
-        />
+        {!error ? (
+          <>
+            <Input
+              hasLock={false}
+              laClass="search_bar_label"
+              spClass="search_bar_span"
+              laMerge="search_bar_merge"
+              clClass="search_bar_input"
+              pass={false}
+              placeholder=""
+              r={inputRef}
+              length={0}
+              erClass="search_bar_error_input"
+              type="text"
+            />
+            <Button
+              txt="SEARCH"
+              cn="search_bar_btn ripple"
+              fnClick={handleClick}
+              disabled={checkVal}
+            />
+          </>
+        ) : (
+          <div className="search_bar_error">
+            <p>{`No results for value ${
+              inputRef.current
+                ? inputRef.current.value
+                : undefined
+            }`}</p>
+            <Button
+              txt="CLOSE"
+              cn="search_bar_btn ripple"
+              fnClick={resetError}
+              disabled={false}
+            />
+          </div>
+        )}
       </div>
       {data.length > 0 &&
         data.map((el, i) => {

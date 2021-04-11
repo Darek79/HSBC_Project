@@ -117,3 +117,16 @@ export const names = [
   "Elektra",
   "Iwo",
 ];
+
+export function checkWidth(): number | undefined {
+  if (window.innerWidth > 1200) {
+    return 3;
+  } else if (
+    window.innerWidth < 1200 &&
+    window.innerWidth > 768
+  ) {
+    return 2;
+  } else {
+    return 1;
+  }
+}

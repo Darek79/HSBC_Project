@@ -1,6 +1,6 @@
 @media only screen and (min-width: 768px) and (max-width: 1220px) {
   body {
-    background-color: lightblue;
+    background-color: #fff8f0;
   }
   .App {
     display: grid;
@@ -16,6 +16,43 @@
       width: 60vw;
       display: flex;
       justify-content: center;
+    }
+    .main_content {
+      grid-column: 1/3;
+      justify-self: center;
+      grid-template-columns: repeat(2, 1fr);
+
+      & > span {
+        justify-self: center;
+      }
+      .card_link {
+        .card_item {
+          width: 400px;
+          height: 500px;
+        }
+      }
+      .search_bar {
+        font-size: 25px;
+        letter-spacing: 1.5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .search_bar_label {
+          margin-right: 15px;
+          .search_bar_input {
+            padding: 10px 8px;
+            border-radius: 5px;
+          }
+        }
+      }
+    }
+    .card_item {
+      grid-template-rows: 0.3fr 2fr 0.3fr 0.5fr;
+    }
+    .card_solo {
+      grid-column: 1/3;
+      width: 400px !important;
+      height: 600px !important;
     }
   }
 }

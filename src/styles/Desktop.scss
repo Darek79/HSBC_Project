@@ -1,4 +1,7 @@
 @media only screen and (min-width: 1224px) {
+  body {
+    background-color: #fff8f0;
+  }
   .App {
     display: grid;
     grid-template-columns: 0.5fr 2fr 0.5fr;
@@ -11,6 +14,41 @@
       align-items: start;
       height: 50vh;
       width: 30vw;
+    }
+    .main_content {
+      grid-column: 2;
+      grid-template-columns: repeat(3, 1fr);
+
+      .card_link {
+        .card_item {
+          width: 400px;
+          height: 500px;
+        }
+      }
+      .search_bar {
+        font-size: 25px;
+        letter-spacing: 1.5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .search_bar_label {
+          margin-right: 15px;
+          .search_bar_input {
+            padding: 10px 8px;
+            border-radius: 5px;
+          }
+        }
+      }
+    }
+    .card_item {
+      grid-template-rows: 0.3fr 2fr 0.3fr 0.5fr;
+    
+    }
+
+    .card_solo {
+      grid-column: 2;
+      width: 600px !important;
+      height: 800px !important;
     }
   }
 }
