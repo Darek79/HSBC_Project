@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from "react";
+import {useState, useEffect} from "react";
 import "./connection.scss";
 
 const iamConnected = (): boolean => {
@@ -13,7 +13,6 @@ export const ContentConnection = (): JSX.Element => {
     connected,
     setConnect,
   ] = useState<boolean>(iamConnected());
-  const connectRef = useRef<number>(0);
 
   const cbOnline = (): void => {
     let clear: number;

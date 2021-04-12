@@ -2,13 +2,13 @@ import React, {useState, RefObject} from "react";
 import lockOpen from "./../../assets/Lockopen.svg";
 import lockClosed from "./../../assets/Lockclosed.svg";
 interface CompProps {
-  clClass: string;
-  laClass: string;
-  spClass: string;
+  clClass?: string;
+  laClass?: string;
+  spClass?: string;
   placeholder: string;
-  erClass: string;
+  erClass?: string;
   type: string;
-  laMerge: string;
+  laMerge?: string;
   clLock?: string;
   hasLock: boolean;
   r: RefObject<HTMLInputElement>;
@@ -63,6 +63,7 @@ export const Input: React.FC<CompProps> = ({
           src={!open ? lockClosed : lockOpen}
           className={clLock}
           onClick={showPass}
+          alt="svglock"
         />
       ) : undefined}
     </label>

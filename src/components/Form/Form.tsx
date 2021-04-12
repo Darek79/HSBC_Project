@@ -1,4 +1,4 @@
-import {useEffect, useState, useRef} from "react";
+import {useState, useRef} from "react";
 import {RouteComponentProps} from "react-router-dom";
 import {
   NavLink,
@@ -41,9 +41,8 @@ export const FormComp: React.FC<CompProps> = ({
 
   function submitMe(e: React.FormEvent): void {
     e.preventDefault();
-    setError(() => "");
-
     if (isRegister) {
+      console.log("NOT HERE");
       const passwordVerified = checkPattern(
         passwordRef.current!.value
       );
@@ -51,65 +50,66 @@ export const FormComp: React.FC<CompProps> = ({
         confirmPasswordRef.current!.value
       );
 
-      console.log(
-        passwordVerified,
-        passwordConfirmVerified
-      );
-
       if (
         passwordVerified &&
-        passwordConfirmVerified &&
-        passwordVerified ===
-          passwordConfirmVerified
+        passwordConfirmVerified
       ) {
-        const isAvailable = userExists(
+        console.log("ok");
+        const isUser = userExists(
           usernameRef.current!.value
         );
-        if (isAvailable) {
-          window.sessionStorage.setItem(
-            usernameRef.current!.value,
-            passwordRef.current!.value
-          );
 
+        if (isUser) {
+          setError(
+            () => "Username is already taken"
+          );
+          resetFields(true);
+        } else {
+          window.sessionStorage.setItem(
+            String(usernameRef.current!.value),
+            String(passwordRef.current!.value)
+          );
           resetFields(true);
           setLogin(() => ({
             state: true,
             path: "/logon",
           }));
           return;
-        } else {
-          setError(
-            () => "Username is already taken"
-          );
-          resetFields(true);
         }
+        console.log(isUser, "isUser");
+        return;
       } else {
+        console.log("not here");
         setError(
           () => "Please check your fields"
         );
         resetFields(true);
-      }
-    } else {
-      const user = window.sessionStorage.getItem(
-        usernameRef.current!.value
-      );
-      if (user === null) {
-        setError(() => "Please sign up first");
-        resetFields(false);
         return;
       }
-      const passwordVerified = checkPattern(
-        passwordRef.current!.value
+    } else {
+      const isUser = userExists(
+        usernameRef.current!.value
       );
-      if (user === passwordVerified) {
-        setLogin(() => ({
-          state: true,
-          path: `/content/${
-            usernameRef.current!.value
-          }`,
-        }));
-        resetFields(false);
-        console.log("ok");
+      if (isUser) {
+        const userPass = window.sessionStorage.getItem(
+          isUser
+        );
+        console.log(
+          userPass === passwordRef.current!.value
+        );
+        if (
+          userPass === passwordRef.current!.value
+        ) {
+          console.log("login");
+          setLogin(() => ({
+            state: true,
+            path: `/content/${
+              usernameRef.current!.value
+            }`,
+          }));
+          resetFields(false);
+          return;
+        }
       } else {
         setError(
           () => "One of the fields is incorrect"
@@ -119,6 +119,7 @@ export const FormComp: React.FC<CompProps> = ({
     }
   }
   function checkPattern(str: string): string {
+    // eslint-disable-next-line
     const isValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[^!@#\$%\^&\*](?=.{7,})/gm.test(
       str
     );
@@ -126,11 +127,10 @@ export const FormComp: React.FC<CompProps> = ({
     return isValid ? str : "";
   }
 
-  function userExists(str: string): boolean {
-    return window.sessionStorage.getItem(str) ===
-      null
-      ? true
-      : false;
+  function userExists(str: string): string {
+    return Object.keys(window.sessionStorage)
+      .filter((el) => el === str)
+      .join(" ");
   }
   function resetFields(needed: boolean): void {
     usernameRef.current!.value = "";

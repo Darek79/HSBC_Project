@@ -1,5 +1,33 @@
 import axios, {AxiosResponse} from "axios";
 import {v4} from "uuid";
+
+// function useFetchItems() {
+//   const items = useRef([]);
+//   useEffect(() => {
+//     // start by resetting the current
+//     items.current = [];
+//     // start a timer
+//     const interval = window.setInterval(() => {
+//       // if we've gone over max, stop
+//       if (items.current.length >= 11) {
+//         window.clearInterval(interval);
+//         return;
+//       }
+//       // fetch the thing and increment the count
+//       fetch('whatever').then((data) => {
+//         items.current.push(data)
+//       });
+
+//       // if interrupted, clear the timer
+//       // reset items back to original value
+//       return () => {
+//         window.clearInterval(interval);
+//         items.current = [];
+//       }
+//     }, 1000)
+//   }, [])
+// }
+
 export const fetchFiles = async (
   url: string,
   fnSet: (arg: () => any[]) => void,
@@ -68,8 +96,10 @@ export function fetchLimit(
         clearTimeout(clear);
       })
       .catch((error) => {
-        fnError(() => error.message);
-        return false;
+        if (error.message) {
+          fnError(() => error.message);
+          return false;
+        }
       })
       .then((d) => {
         if (d || d === undefined) {

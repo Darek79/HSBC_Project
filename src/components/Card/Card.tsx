@@ -36,12 +36,12 @@ export const Card: React.FC<CompProps> = memo(
     return (
       <NavLink
         to={{
-          pathname: `/post/${id}/${userName}`,
+          pathname: `/post/${id}/${userId}`,
           state: {
             userId: userId,
             title: title,
             body: body,
-            referrer: window.location.pathname,
+            referrer: userName,
           },
         }}
         className={cardLink}>

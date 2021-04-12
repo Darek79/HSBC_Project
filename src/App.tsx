@@ -9,10 +9,10 @@ import "./styles/Desktop.scss";
 import "./styles/Reset.scss";
 import {FormComp} from "./components/Form/Form";
 import {Content} from "./components/Content/Content";
-import {Card} from "./components/Card/Card";
+import {Path404} from "./components/404/404";
 import {CardNoLink} from "./components/Card/CardNoLink";
 import {ContentConnection} from "./components/ConnectionCheck/Connection";
-export const App = () => {
+export const App = (): JSX.Element => {
   return (
     <div className="App">
       <ContentConnection />
@@ -51,7 +51,6 @@ export const App = () => {
               />
             )}></Route>
           <Route
-            exact
             path="/post/:id/:name"
             render={(p) => (
               <CardNoLink
@@ -63,6 +62,10 @@ export const App = () => {
                 clBody="card_body"
               />
             )}></Route>
+          <Route
+            exact
+            path="*"
+            render={(p) => <Path404 />}></Route>
         </Switch>
       </Router>
     </div>
@@ -70,16 +73,3 @@ export const App = () => {
 };
 
 export default App;
-
-{
-  /* <Route
-exact
-path="/logon"
-render={(p) => (
-  <FormComp
-    seClass="form_main"
-    clClassF="form_main_element"
-    isRegister={false}
-  />
-)}></Route> */
-}

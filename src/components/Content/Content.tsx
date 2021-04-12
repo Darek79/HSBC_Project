@@ -29,12 +29,17 @@ export const Content: React.FC<CompProps> = ({
   clSection,
   imagesCount,
   history,
+  location,
 }): JSX.Element => {
   const [data, setData] = useState<any[]>([]);
   const [error, setError] = useState<string>("");
   const [checkVal, setCheck] = useState<boolean>(
     false
   );
+  const [
+    checkLoginStatus,
+    setLoginStatus,
+  ] = useState<boolean>(false);
   const nodeRef = useRef<IntersectionObserver | null>(
     null
   );
@@ -42,10 +47,11 @@ export const Content: React.FC<CompProps> = ({
     null
   );
   const currentNode = useRef<null | string>(null);
+  const spanNode = useRef<HTMLElement[]>([]);
   let arr: any[] = [];
 
   useEffect(() => {
-    if (sessionStorage.getItem("data")) {
+    if (window.sessionStorage.getItem("data")) {
       const time = Math.floor(Date.now() / 1000);
       const object = sessionStorage.getItem(
         "data"
@@ -60,7 +66,7 @@ export const Content: React.FC<CompProps> = ({
       if (object !== null) {
         parsed = JSON.parse(object);
       }
-      if (time - parsed.lastChecked > 600) {
+      if (time - parsed.lastChecked > 60) {
         setData(() => []);
         window.sessionStorage.removeItem("data");
         fetchLimit(
@@ -84,7 +90,7 @@ export const Content: React.FC<CompProps> = ({
         names
       );
     }
-  }, []);
+  }, [imagesCount, checkLoginStatus]);
 
   const handleClick = (): void => {
     if (
@@ -92,7 +98,7 @@ export const Content: React.FC<CompProps> = ({
       inputRef.current.value
     ) {
       setCheck((p) => !p);
-      console.log(checkWidth());
+
       let nr = checkWidth();
       let end =
         Number(currentNode.current) + nr! <
@@ -115,7 +121,6 @@ export const Content: React.FC<CompProps> = ({
             inputRef.current.value
           )
         ) {
-          console.log(data[i]);
           if (
             data[i] &&
             window.location.pathname
@@ -126,8 +131,7 @@ export const Content: React.FC<CompProps> = ({
                 userId: data[i].userId,
                 title: data[i].title,
                 body: data[i].body,
-                referrer:
-                  window.location.pathname,
+                referrer: data[i].userId,
               }
             );
           }
@@ -143,6 +147,9 @@ export const Content: React.FC<CompProps> = ({
       }
     }
   };
+  const logouthandler = (): void => {
+    setLoginStatus(() => true);
+  };
 
   const resetError = (): void => {
     setError("");
@@ -150,18 +157,16 @@ export const Content: React.FC<CompProps> = ({
 
   useEffect(() => {
     if (data.length === imagesCount - 1) {
+      console.log(spanNode);
       nodeRef.current = new IntersectionObserver(
         ([entry]) => {
-          console.log(entry);
           currentNode.current = entry.target.getAttribute(
             "data-index"
           );
         },
         {threshold: 1}
       );
-      console.log(arr);
       if (!checkVal) {
-        console.log("observe");
         arr.forEach((el) =>
           nodeRef.current!.observe(el.current)
         );
@@ -170,7 +175,7 @@ export const Content: React.FC<CompProps> = ({
       if (
         !window.sessionStorage.getItem("data")
       ) {
-        sessionStorage.setItem(
+        window.sessionStorage.setItem(
           "data",
           JSON.stringify({
             lastChecked: Math.floor(
@@ -186,11 +191,32 @@ export const Content: React.FC<CompProps> = ({
         nodeRef.current!.disconnect();
       }
     };
-  }, [data, checkVal]);
+  }, [data, imagesCount, spanNode, checkVal]);
+
+  useEffect(() => {
+    if (checkLoginStatus) {
+      Object.keys(window.sessionStorage).forEach(
+        (el) => {
+          if (
+            match.params.name ||
+            location.pathname
+          ) {
+            setData(() => []);
+            window.sessionStorage.removeItem(el);
+            history.push("/");
+          }
+        }
+      );
+    }
+  }, [
+    checkLoginStatus,
+    history,
+    location.pathname,
+    match.params.name,
+  ]);
 
   return (
     <section className={clSection}>
-      {console.log(history)}
       <div className="search_bar">
         {!error ? (
           <>
@@ -213,6 +239,12 @@ export const Content: React.FC<CompProps> = ({
               fnClick={handleClick}
               disabled={checkVal}
             />
+            <Button
+              txt="LOGOUT"
+              cn="search_bar_btn search_bar_logout ripple"
+              fnClick={logouthandler}
+              disabled={false}
+            />
           </>
         ) : (
           <div className="search_bar_error">
@@ -234,6 +266,7 @@ export const Content: React.FC<CompProps> = ({
         data.map((el, i) => {
           const loopRef = createRef<HTMLSpanElement>();
           arr.push(loopRef);
+
           return (
             <span
               key={`${el.key}`}
@@ -249,7 +282,10 @@ export const Content: React.FC<CompProps> = ({
                 clUser="card_user"
                 clTitle="card_title"
                 clBody="card_body"
-                userName={match.params.name}
+                userName={
+                  match.params.name ||
+                  location.pathname
+                }
               />
             </span>
           );

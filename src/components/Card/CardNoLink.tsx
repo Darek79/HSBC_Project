@@ -28,12 +28,12 @@ export const CardNoLink: React.FC<CompProps> = ({
   clBody,
   clUser,
 }): JSX.Element => {
-  const {state} = useLocation<Match>();
+  const {state, pathname} = useLocation<Match>();
   return (
     <section className={`${clItem} ${cardSolo}`}>
-      {console.log(state.referrer)}
+      {console.log(state, pathname, "path")}
       <Link
-        to={state.referrer}
+        to={`/content/${state.referrer}`}
         className="card_solo_x"></Link>
       <p className={clUser}>{state.userId}</p>
       <Picture

@@ -38,17 +38,43 @@
             border-radius: 5px;
           }
         }
+        .search_bar_logout {
+          position: relative;
+          left: 15px;
+        }
       }
     }
     .card_item {
       grid-template-rows: 0.3fr 2fr 0.3fr 0.5fr;
-    
     }
 
     .card_solo {
       grid-column: 2;
       width: 600px !important;
       height: 800px !important;
+    }
+    .path404 {
+      width: 100vw;
+      height: 100vh;
+      text-align: center;
+
+      grid-column: 2;
+      justify-self: center;
+      align-self: start;
+      color: #fff8f0;
+      background: #212529;
+      .path404_msg {
+        margin-top: 100px;
+        font-size: 40px;
+      }
+      .path404_link {
+        font-size: 30px;
+        display: block;
+        text-decoration: none;
+        color: #fff8f0;
+        padding: 10px;
+        margin-top: 20px;
+      }
     }
   }
 }
